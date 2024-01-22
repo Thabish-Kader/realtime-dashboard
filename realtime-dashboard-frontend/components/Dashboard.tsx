@@ -9,9 +9,13 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  PieChart,
 } from "recharts";
 import { AreaChartCanvas } from "./AreaChartCanvas";
-import { LineBarAreaComposedChart } from "./LineBarAreaComposedChart";
+import { BarChartCanvas } from "./BarChartCanvas";
+import { PieChartCanvas } from "./PieChartCanvas";
+import { DomainRadarChart } from "./DomainRadarChart";
+import { DashBoardCards } from "./DashBoardCards";
 
 export const Dashboard = () => {
   const [data, setData] = useState<ServerData[]>([]);
@@ -37,12 +41,20 @@ export const Dashboard = () => {
       });
     });
   }, []);
-  console.log(data);
 
   return (
-    <div className="h-[500px] w-screen flex items-center justify-center">
-      <AreaChartCanvas data={dummyData} />
-      <LineBarAreaComposedChart data={dummyData} />
+    <div className="h-screen w-screen flex flex-col items-center justify-center ">
+      <div className="flex items-center h-[500px] w-full">
+        <BarChartCanvas data={dummyData} />
+        <DashBoardCards />
+        <div className="flex flex-col items-center h-full w-full">
+          <PieChartCanvas />
+          <DomainRadarChart />
+        </div>
+      </div>
+      <div className="h-[300px] w-full">
+        <AreaChartCanvas data={dummyData} />
+      </div>
     </div>
   );
 };
