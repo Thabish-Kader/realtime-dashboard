@@ -1,16 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { socket } from "@/socket";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-} from "recharts";
 import { AreaChartCanvas } from "./AreaChartCanvas";
 import { BarChartCanvas } from "./BarChartCanvas";
 import { PieChartCanvas } from "./PieChartCanvas";
@@ -19,41 +9,85 @@ import { DashBoardCards } from "./DashBoardCards";
 
 export const Dashboard = () => {
   const [data, setData] = useState<ServerData[]>([]);
-  const dummyData = [
-    { user: 958, sys: 716, idle: 667 },
-    { user: 958, sys: 716, idle: 667 },
-    { user: 562, sys: 216, idle: 666 },
-    { user: 562, sys: 216, idle: 666 },
-    { user: 737, sys: 533, idle: 756 },
-    { user: 737, sys: 533, idle: 756 },
-    { user: 255, sys: 235, idle: 864 },
-    { user: 255, sys: 235, idle: 864 },
-    { user: 925, sys: 797, idle: 393 },
-    { user: 925, sys: 797, idle: 393 },
-  ];
+  const [percentageChange, setPercentageChange] = useState<Change | null>(null);
 
   useEffect(() => {
-    socket.on("time", (serverData) => {
-      // NOTE: setData([...data, serverData]) cannot be used here because the data variable inside the callback function refers to the state variable at the time the effect was created. React state updates are asynchronous, and the data variable inside the callback might not have the latest state.
-      setData((prevData) => {
-        const newData = [...prevData, serverData];
-        return newData.slice(Math.max(newData.length - 10, 0));
-      });
-    });
+    let previousData: ServerData[] = [];
+
+    const handleSocketData = (serverData: ServerData[]) => {
+      if (previousData.length > 0) {
+        // Calculate percentage change
+        const previousTotalRevenue = previousData.reduce(
+          (acc, curr) => acc + curr.total_revenue,
+          0
+        );
+        const currentTotalRevenue = serverData.reduce(
+          (acc, curr) => acc + curr.total_revenue,
+          0
+        );
+        const changeTotalRevenue =
+          ((currentTotalRevenue - previousTotalRevenue) /
+            previousTotalRevenue) *
+          100;
+
+        // Calculate the total_loss accumulation previous iteration
+        const previousTotalLoss = previousData.reduce(
+          (acc, curr) => acc + curr.loss,
+          0
+        );
+        const currentTotalLoss = serverData.reduce(
+          (acc, curr) => acc + curr.loss,
+          0
+        );
+        const changeLoss =
+          ((currentTotalLoss - previousTotalLoss) / previousTotalLoss) * 100;
+
+        // Calculate the total_profits accumulation compared to the previous iteration
+        const previousTotalProfits = previousData.reduce(
+          (acc, curr) => acc + curr.loss,
+          0
+        );
+        const currentTotalProfits = serverData.reduce(
+          (acc, curr) => acc + curr.loss,
+          0
+        );
+        const changeProfit =
+          ((currentTotalProfits - previousTotalProfits) /
+            previousTotalProfits) *
+          100;
+
+        const change = { changeTotalRevenue, changeLoss, changeProfit };
+        setPercentageChange(change);
+      }
+      setData(serverData);
+      previousData = serverData;
+    };
+
+    socket.on("time", handleSocketData);
+
+    return () => {
+      socket.off("time", handleSocketData);
+    };
   }, []);
 
+  // useEffect(() => {
+  //   socket.on("time", (serverData) => {
+  //     setData(serverData);
+  //   });
+  // }, []);
+
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center ">
+    <div className="h-screen w-screen flex flex-col items-center justify-center p-4">
       <div className="flex items-center h-[500px] w-full">
-        <BarChartCanvas data={dummyData} />
-        <DashBoardCards />
+        <BarChartCanvas data={data} />
+        <DashBoardCards data={data} percentageChange={percentageChange} />
         <div className="flex flex-col items-center h-full w-full">
-          <PieChartCanvas />
-          <DomainRadarChart />
+          <PieChartCanvas data={data} />
+          <DomainRadarChart data={data} />
         </div>
       </div>
       <div className="h-[300px] w-full">
-        <AreaChartCanvas data={dummyData} />
+        <AreaChartCanvas data={data} />
       </div>
     </div>
   );

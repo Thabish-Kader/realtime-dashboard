@@ -3,8 +3,8 @@ import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
 import { PORT } from "@/constants";
-
-import os from "os";
+import { getRandomRevenueData } from "@/utils/apis";
+import { CronJob } from "cron";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -18,15 +18,17 @@ const io = new Server(httpServer, {
   transports: ["websocket", "polling"],
 });
 
-io.on("connection", async (socket) => {
-  setInterval(() => {
-    const data = {
-      user: Math.floor(Math.random() * 1000),
-      sys: Math.floor(Math.random() * 1000),
-      idle: Math.floor(Math.random() * 1000),
-    };
+io.on("connection", (socket) => {
+  const job = new CronJob("*/9 * * * * *", async () => {
+    const data = await getRandomRevenueData();
     socket.emit("time", data);
-  }, 1000);
+  });
+
+  job.start();
+
+  socket.on("disconnect", () => {
+    job.stop();
+  });
 });
 
-httpServer.listen(4000, () => console.log(`Listenting to ${4000}`));
+httpServer.listen(PORT, () => console.log(`Listenting to ${PORT}`));

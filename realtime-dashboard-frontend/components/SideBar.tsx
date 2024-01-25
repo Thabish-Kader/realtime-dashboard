@@ -6,7 +6,7 @@ import { CiWallet } from "react-icons/ci";
 
 export const SideBar = () => {
   return (
-    <div className="min-h-[95vh] min-w-[300px] bg-[#191e24] rounded-xl m-4 flex flex-col">
+    <div className="min-h-[95vh] min-w-[300px] hidden md:flex bg-[#191e24] rounded-xl m-4  flex-col">
       <div className="flex flex-col space-y-8 h-full p-6">
         <div className="bg-gray-700 rounded-xl">
           <input

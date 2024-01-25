@@ -25,12 +25,12 @@ export const BarChartCanvas = ({ data }: { data: ServerData[] }) => {
           bottom: 5,
         }}
       >
-        <XAxis dataKey="user" />
+        <XAxis dataKey="date" />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="sys" stackId="a" fill="#8884d8" />
-        <Bar dataKey="idle" stackId="a" fill="#82ca9d" />
+        <Bar dataKey="total_revenue" stackId="a" fill="#8884d8" />
+        <Bar dataKey="profit" stackId="a" fill="#82ca9d" />
       </BarChart>
     </ResponsiveContainer>
   );
