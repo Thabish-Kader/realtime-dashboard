@@ -63,6 +63,7 @@ export const Dashboard = () => {
       previousData = serverData;
     };
 
+    // socket.on("time", (data) => handleSocketData(data));
     socket.on("time", handleSocketData);
 
     return () => {

@@ -1,7 +1,7 @@
 {
-  "name": "fds-backend",
+  "name": "realtime-dashboard",
   "version": "1.0.0",
-  "description": "backend for face detection system",
+  "description": "backend for realtime dashboard",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src -r tsconfig-paths/register src/index.ts"
@@ -9,9 +9,7 @@
   "keywords": [
     "javascript",
     "express",
-    "face",
-    "detection",
-    "system"
+    "realtime dashboard"
   ],
   "author": "thabish",
   "license": "ISC",
