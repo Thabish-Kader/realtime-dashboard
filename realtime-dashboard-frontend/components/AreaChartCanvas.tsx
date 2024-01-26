@@ -23,7 +23,7 @@ export const AreaChartCanvas = ({ data }: { data: ServerData[] }) => {
           bottom: 0,
         }}
       >
-        <XAxis dataKey="date" />
+        <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
         <Area

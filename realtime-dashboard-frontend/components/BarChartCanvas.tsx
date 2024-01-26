@@ -25,7 +25,7 @@ export const BarChartCanvas = ({ data }: { data: ServerData[] }) => {
           bottom: 5,
         }}
       >
-        <XAxis dataKey="date" />
+        <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
         <Legend />

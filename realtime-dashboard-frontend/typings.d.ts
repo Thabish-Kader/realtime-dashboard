@@ -1,5 +1,5 @@
 type ServerData = {
-  date: number;
+  name: string;
   total_revenue: number;
   loss: number;
   profit: number;

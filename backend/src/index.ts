@@ -19,7 +19,8 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  const job = new CronJob("*/9 * * * * *", async () => {
+  //Cron job execution timing documentation: https://www.easycron.com/faq/What-cron-expression-does-easycron-support
+  const job = new CronJob("*/5 * * * * *", async () => {
     const data = await getRandomRevenueData();
     socket.emit("time", data);
   });

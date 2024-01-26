@@ -70,12 +70,6 @@ export const Dashboard = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   socket.on("time", (serverData) => {
-  //     setData(serverData);
-  //   });
-  // }, []);
-
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center p-4">
       <div className="flex items-center h-[500px] w-full">
